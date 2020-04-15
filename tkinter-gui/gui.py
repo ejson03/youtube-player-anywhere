@@ -67,12 +67,15 @@ class PyPlayer(tk.Frame):
 
     def play(self):
         if not self.vlc_media_player_instance.get_media():
+            print(f'1: {self.vlc_media_player_instance.get_media()}')
             self.Media = self.vlc_instance.media_new(self.url)
             self.vlc_media_player_instance.set_media(self.Media)
             self.vlc_media_player_instance.set_hwnd(self.get_handle())
             self.play()
         else:
+            print(f'2: {self.vlc_media_player_instance.get_media()}')
             if self.vlc_media_player_instance.play() == -1:
+                print(f'3: {self.vlc_media_player_instance.get_media()}')
                 pass
 
     def close(self):
@@ -86,14 +89,14 @@ class PyPlayer(tk.Frame):
     def stop(self):
         """Stop the player."""
         self.vlc_media_player_instance.stop()
-        self.url = ""
+        self.vlc_media_player_instance.set_media(None)
 
       
 
 class BaseTkContainer:
     def __init__(self):
         self.tk_instance = tk.Tk()
-        self.tk_instance.title("py player")
+        self.tk_instance.title("Youtube Player")
         self.tk_instance.protocol("WM_DELETE_WINDOW", self.delete_window)
         self.tk_instance.geometry("720x480") # default to 1080p
         self.tk_instance.configure(background='black')
