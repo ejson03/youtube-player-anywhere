@@ -15,25 +15,25 @@ class PyPlayer(tk.Frame):
         self.container = container
         self.container_instance = container_instance
         self.default_font = Font(family="Times New Roman", size=16)
-
         # create vlc instance
         self.vlc_instance, self.vlc_media_player_instance = self.create_vlc_instance()
-    
+         # set search box
+        self.create_search_box()
         # vlc video frame
         self.video_panel = ttk.Frame(self.container_instance)
         self.canvas = tk.Canvas(self.video_panel, background='black')
         self.canvas.pack(fill=tk.BOTH, expand=1)
         self.video_panel.pack(fill=tk.BOTH, expand=1)
-
-         # set search box
-        self.search = tk.Entry(self.container_instance, width=80) 
-        self.canvas.create_window(400, 20, window=self.search)    
-        self.button = tk.Button(text='Find youtube', command=self.url)
-        self.canvas.create_window(100, 20, window=self.button)
-
         # controls
         self.create_control_panel()
 
+    def create_search_box(self):
+        search_panel = ttk.Frame(self.container_instance)
+        self.search = tk.Entry(search_panel, width=80) 
+        self.button = ttk.Button(search_panel, text='Find youtube', command=self.getURL)
+        self.button.pack(side=tk.LEFT)
+        self.search.pack(side=tk.LEFT)
+        search_panel.pack(side=tk.TOP)
 
     def create_control_panel(self):
         """Add control panel."""
@@ -52,12 +52,11 @@ class PyPlayer(tk.Frame):
         self.container_instance.update()
         return vlc_instance, vlc_media_player_instance
 
-    def url (self):  
+    def getURL (self):  
         name = self.search.get()
         query_string = urllib.parse.urlencode({"search_query" : name})
         html_content = urllib.request.urlopen("http://www.youtube.com/results?" + query_string)
         search_results = re.findall(r'href=\"\/watch\?v=(.{11})', html_content.read().decode())
-        print(len(search_results), search_results)
         url = "http://www.youtube.com/watch?v=" + search_results[0]
         video = pafy.new(url)
         best = video.getbest()
@@ -70,7 +69,7 @@ class PyPlayer(tk.Frame):
         if not self.vlc_media_player_instance.get_media():
             self.Media = self.vlc_instance.media_new(self.url)
             self.vlc_media_player_instance.set_media(self.Media)
-            self.vlc_media_player_instance.set_xwindow(self.get_handle())
+            self.vlc_media_player_instance.set_hwnd(self.get_handle())
             self.play()
         else:
             if self.vlc_media_player_instance.play() == -1:
@@ -86,8 +85,9 @@ class PyPlayer(tk.Frame):
 
     def stop(self):
         """Stop the player."""
-        self.url = ""
         self.vlc_media_player_instance.stop()
+        self.url = ""
+
       
 
 class BaseTkContainer:
