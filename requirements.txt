@@ -2,3 +2,4 @@ python-vlc
 pafy
 flask
 flask_cors
+youtube_dl

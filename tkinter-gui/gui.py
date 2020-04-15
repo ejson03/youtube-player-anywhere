@@ -57,8 +57,8 @@ class PyPlayer(tk.Frame):
         query_string = urllib.parse.urlencode({"search_query" : name})
         html_content = urllib.request.urlopen("http://www.youtube.com/results?" + query_string)
         search_results = re.findall(r'href=\"\/watch\?v=(.{11})', html_content.read().decode())
+        print(len(search_results), search_results)
         url = "http://www.youtube.com/watch?v=" + search_results[0]
-        print(url)
         video = pafy.new(url)
         best = video.getbest()
         self.url = best.url
@@ -86,8 +86,9 @@ class PyPlayer(tk.Frame):
 
     def stop(self):
         """Stop the player."""
-        self.vlc_media_player_instance.stop()
         self.url = ""
+        self.vlc_media_player_instance.stop()
+      
 
 class BaseTkContainer:
     def __init__(self):
@@ -110,5 +111,5 @@ class BaseTkContainer:
 
 
 root = BaseTkContainer()
-player = PyPlayer(root, root.tk_instance, title="pyplayer")
+player = PyPlayer(root, root.tk_instance, title="Youtube Player")
 root.tk_instance.mainloop()
