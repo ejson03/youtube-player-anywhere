@@ -1,0 +1,4 @@
+python-vlc
+pafy
+flask
+flask_cors
