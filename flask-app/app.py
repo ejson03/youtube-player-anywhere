@@ -2,8 +2,15 @@ from flask import Flask, render_template, request
 import urllib.request
 import urllib.parse
 import re
+from pyfladesk import init_gui
+import os, sys
+base_dir = '.'
+if hasattr(sys, '_MEIPASS'):
+    base_dir = os.path.join(sys._MEIPASS)
 
-app = Flask(__name__)
+app = Flask(__name__,
+        static_folder=os.path.join(base_dir, 'static'),
+        template_folder=os.path.join(base_dir, 'templates'))
 
 def get_url(query):
     query_string = urllib.parse.urlencode({"search_query" : query})
@@ -25,4 +32,5 @@ def video():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # app.run(debug=True)
+    init_gui(app)
