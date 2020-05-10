@@ -3,3 +3,5 @@ pafy
 flask
 flask_cors
 youtube_dl
+pyinstaller
+pyfladesk
